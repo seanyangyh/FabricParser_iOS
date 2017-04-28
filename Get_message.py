@@ -98,6 +98,16 @@ def MailContentParser(rawdata):
         decode_result = str(decode_result, 'utf-8')
         urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',
                           decode_result)
+        # try to get sub-title
+        decode_result_split = decode_result.split('\r\n')
+        print(decode_result_split)
+        if decode_result_split[1] == '':
+            subjecttitle = subjecttitle + decode_result_split[3]
+        else:
+            subjecttitle = subjecttitle + decode_result_split[2]
+            begin_fabric_num = decode_result_split[0].index("#")
+            fabric_num = decode_result_split[0][begin_fabric_num + 1:begin_fabric_num + 6]
+        # url add query last 7 days
         urllast7days = urls[0] + "?time=last-seven-days"
         print(fabric_num + ' , ' + subjectver + ' , ' + subjecttitle + ' , ' + urllast7days + ' , ' + json_data['snippet'])
         result = dict(num=fabric_num, ver=subjectver, title=subjecttitle, url=urllast7days, detail=json_data['snippet'])
